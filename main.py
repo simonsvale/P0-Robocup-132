@@ -27,7 +27,7 @@ threshold = (BLACK + WHITE) / 2
 DRIVE_SPEED = 100
 
 # Turning gain variable, higher variable = more turn
-PROPORTIONAL_GAIN = 4.0
+PROPORTIONAL_GAIN = 4.1
 
 while True:
     # Calculate the deviation from the threshold.
