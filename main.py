@@ -24,7 +24,7 @@ WHITE = 99
 threshold = (BLACK + WHITE) / 2
 
 # Used power of motor in % ?
-DRIVE_SPEED = 100
+DRIVE_SPEED = 1000
 
 # Turning gain variable, higher variable = more turn
 PROPORTIONAL_GAIN = 4
