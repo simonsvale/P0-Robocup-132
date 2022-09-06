@@ -42,7 +42,7 @@ while True:
     robot1.drive(DRIVE_SPEED, turn_rate)
 
     # stops at black border.
-    if  linie_sensor.reflection() < 5:
+    if  linie_sensor.reflection() < 11:
          robot1.brake()
          robot1.motorR.brake()
          
