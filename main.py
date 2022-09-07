@@ -13,8 +13,15 @@ kontroller = EV3Brick()
 motorL = Motor(Port.D, Direction.CLOCKWISE)
 motorR = Motor(Port.A, Direction.CLOCKWISE)
 
-# Assigning the colour sensor to a variable
+# Assigning the small motor to variable.
+motorGrip = Motor(Port.C, Direction.CLOCKWISE)
+
+
+# Assigning the colour sensor to a variable.
 linie_sensor = ColorSensor(Port.S4)
+
+# Assigning the distance (Ultrasonic sensor) sensor to a variable.
+distance_sensor = UltrasonicSensor(Port.S3)
 
 robot1 = DriveBase(right_motor = motorL, left_motor = motorR, wheel_diameter=22, axle_track=10)
 
@@ -47,4 +54,9 @@ while True:
          
     wait(10)
     kontroller.screen.clear()
+
+#Script for 
+if distance < 3.0:
+     robot1.motorGrip
+
 
