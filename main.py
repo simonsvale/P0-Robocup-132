@@ -1,8 +1,10 @@
+#!/usr/bin/env pybricks-micropython
+
 # 2022 P0 Project
 # NAMES HERE ©
 
 
-#!/usr/bin/env pybricks-micropython
+
 from pybricks.hubs import EV3Brick
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
                                  InfraredSensor, UltrasonicSensor, GyroSensor)
@@ -17,7 +19,7 @@ from pybricks.media.ev3dev import SoundFile, ImageFile
 
 kontroller = EV3Brick()                           # Main LEGO brick
 
-motorGrip = Motor(Port.C, Direction.CLOCKWISE)    # Assigning the small motor to variable.
+motorGrip = Motor(Port.C, Direction.CLOCKWISE)    # Assigning the small motor to a variable.
 
 motorL = Motor(Port.D, Direction.CLOCKWISE)       # Assigning the motors to variables.
 motorR = Motor(Port.A, Direction.CLOCKWISE)
@@ -25,15 +27,17 @@ motorR = Motor(Port.A, Direction.CLOCKWISE)
 dist_sensor = UltrasonicSensor(Port.S3)           # Assigning the distance (Ultrasonic sensor) sensor to a variable.
 linie_sensor = ColorSensor(Port.S4)               # Assigning the colour sensor to a variable.
 
-robot1 = DriveBase(right_motor = motorL, left_motor = motorR, wheel_diameter=22, axle_track=10)          # Wheel motors drivebase
+wheels_drive = DriveBase(right_motor = motorL, left_motor = motorR, wheel_diameter=22, axle_track=10)          # Wheel motors drivebase
 
 BLACK = 60
 WHITE = 99
 threshold = (BLACK + WHITE) / 2                    # Reflection variables calculated 
 
-DRIVE_SPEED = 1000                                 # Used power of motor in % ?
+drive_speed = 1000                                 # Used power of motor in % ?
 
-turn_gain = 4                              # Turning gain variable, higher variable = more turn
+turn_gain = 4                                      # Turning gain variable, higher variable = more turn
+
+section_number = 0
 
 
 #
@@ -42,12 +46,36 @@ turn_gain = 4                              # Turning gain variable, higher varia
 
 
 # repeat forever
-def forever():                                     
+def forever(): 
+     global section_number 
      while True:
-          screen_draw_reflection()
-          black_line_stop()
-          grip_flask()
-          line_follow()
+          if 5 < linie_sensor.reflection() < 10:
+               section_number += 1
+
+          if section_number == 0:
+               section0()
+          
+          if section_number == 1:
+               section1()
+
+  
+
+def section0():
+     line_follow()
+
+def section1():
+     1+1
+
+def section2():
+     1+1
+
+def section3():
+     1+1
+
+def section4():
+     1+1
+     
+
      
 def line_follow():
      # Calculate the deviation from the threshold.
@@ -57,7 +85,7 @@ def line_follow():
      turn_rate = turn_gain * deviation
 
      # Set the drive base speed and turn rate.
-     robot1.drive(DRIVE_SPEED, turn_rate)
+     wheels_drive.drive(drive_speed, turn_rate)
 
 def black_line_stop():
      if  8 < linie_sensor.reflection() < 11:
