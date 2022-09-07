@@ -38,51 +38,42 @@ DRIVE_SPEED = 1000
 PROPORTIONAL_GAIN = 4
 
 
-class claw_grip:
-     #Script for gripping the flask at a certain distance
-     if dist_sensor.distance() < 400:
-
-          #Runs the claw for (speed,time)
-          kontroller.speaker.beep()
-
-
-class follow_line:
+# repeat forever
+def forever():
      while True:
-          # Calculate the deviation from the threshold.
-          deviation = linie_sensor.reflection() - threshold
+          screen_draw_reflection()
+          black_line_stop()
+          grip_flask()
+          line_follow()
+     
+def line_follow():
+     # Calculate the deviation from the threshold.
+     deviation = linie_sensor.reflection() - threshold
+ 
+     # Calculate the turn rate.
+     turn_rate = PROPORTIONAL_GAIN * deviation
 
-    
-          # Calculate the turn rate.
-          turn_rate = PROPORTIONAL_GAIN * deviation
+     # Set the drive base speed and turn rate.
+     robot1.drive(DRIVE_SPEED, turn_rate)
 
-          # Set the drive base speed and turn rate.
-          robot1.drive(DRIVE_SPEED, turn_rate)
-
-
-class black_line_stop:
+          
+def screen_draw_reflection():
+     kontroller.screen.draw_text(1, 1, linie_sensor.reflection()) 
+     wait(100) 
+     kontroller.screen.clear()
+     
+def black_line_stop():
      if  8 < linie_sensor.reflection() < 11:
           #robot1.motorR.brake()
           kontroller.speaker.beep()
+               
+def grip_flask():
+     #Script for gripping the flask at a certain distance
+     if dist_sensor.distance() < 40:
+          #Runs the claw for (speed,time)
+          kontroller.speaker.beep()
 
-#Draws the reflection amount on the EV3Brick screen.
-class reflection_screen_draw:
-     while True:     
-      kontroller.screen.draw_text(1, 1, linie_sensor.reflection()) 
-      wait(100) 
-      kontroller.screen.clear() 
+forever()
 
-  
-
-         
-     
-
-
-    
-
-
-
-
-    
-
-
+          
 
