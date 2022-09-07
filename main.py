@@ -1,3 +1,7 @@
+# 2022 P0 Project
+# NAMES HERE ©
+
+
 #!/usr/bin/env pybricks-micropython
 from pybricks.hubs import EV3Brick
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
@@ -7,39 +11,38 @@ from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 
-kontroller = EV3Brick()
+#
+# variables 
+#
 
-# Assigning the small motor to variable.
-motorGrip = Motor(Port.C, Direction.CLOCKWISE)
+kontroller = EV3Brick()                           # Main LEGO brick
 
-# Assigning the distance (Ultrasonic sensor) sensor to a variable.
-dist_sensor = UltrasonicSensor(Port.S3)
+motorGrip = Motor(Port.C, Direction.CLOCKWISE)    # Assigning the small motor to variable.
 
-# Assigning the motors to variables.
-motorL = Motor(Port.D, Direction.CLOCKWISE)
+motorL = Motor(Port.D, Direction.CLOCKWISE)       # Assigning the motors to variables.
 motorR = Motor(Port.A, Direction.CLOCKWISE)
 
-   
-# Assigning the colour sensor to a variable.
-linie_sensor = ColorSensor(Port.S4)
+dist_sensor = UltrasonicSensor(Port.S3)           # Assigning the distance (Ultrasonic sensor) sensor to a variable.
+linie_sensor = ColorSensor(Port.S4)               # Assigning the colour sensor to a variable.
 
-# Wheel motors drivebase
-robot1 = DriveBase(right_motor = motorL, left_motor = motorR, wheel_diameter=22, axle_track=10)
+robot1 = DriveBase(right_motor = motorL, left_motor = motorR, wheel_diameter=22, axle_track=10)          # Wheel motors drivebase
 
-#Reflection variables calculated 
 BLACK = 60
 WHITE = 99
-threshold = (BLACK + WHITE) / 2
+threshold = (BLACK + WHITE) / 2                    # Reflection variables calculated 
 
-# Used power of motor in % ?
-DRIVE_SPEED = 1000
+DRIVE_SPEED = 1000                                 # Used power of motor in % ?
 
-# Turning gain variable, higher variable = more turn
-PROPORTIONAL_GAIN = 4
+turn_gain = 4                              # Turning gain variable, higher variable = more turn
+
+
+#
+# FUNCTIONS
+#
 
 
 # repeat forever
-def forever():
+def forever():                                     
      while True:
           screen_draw_reflection()
           black_line_stop()
@@ -51,17 +54,11 @@ def line_follow():
      deviation = linie_sensor.reflection() - threshold
  
      # Calculate the turn rate.
-     turn_rate = PROPORTIONAL_GAIN * deviation
+     turn_rate = turn_gain * deviation
 
      # Set the drive base speed and turn rate.
      robot1.drive(DRIVE_SPEED, turn_rate)
 
-          
-def screen_draw_reflection():
-     kontroller.screen.draw_text(1, 1, linie_sensor.reflection()) 
-     wait(100) 
-     kontroller.screen.clear()
-     
 def black_line_stop():
      if  8 < linie_sensor.reflection() < 11:
           #robot1.motorR.brake()
@@ -73,7 +70,18 @@ def grip_flask():
           #Runs the claw for (speed,time)
           kontroller.speaker.beep()
 
+
+
+
+#
+# debug
+#
+
+def screen_draw_reflection():
+     kontroller.screen.draw_text(1, 1, linie_sensor.reflection()) 
+     wait(100) 
+     kontroller.screen.clear()  
+
 forever()
 
-          
-
+#END OF FILE
