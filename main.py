@@ -23,7 +23,11 @@ linie_sensor = ColorSensor(Port.S4)
 # Assigning the distance (Ultrasonic sensor) sensor to a variable.
 distance_sensor = UltrasonicSensor(Port.S3)
 
+#Wheel motors drivebase
 robot1 = DriveBase(right_motor = motorL, left_motor = motorR, wheel_diameter=22, axle_track=10)
+
+#Claw drivebase
+claw = DriveBase(motorGrip = motor, wheel_diameter=22, axle_track=10)
 
 # Reflection variables calculated 
 BLACK = 60
@@ -55,8 +59,9 @@ while True:
     wait(10)
     kontroller.screen.clear()
 
-#Script for 
+#Script for gripping the flask at a certain distance
 if distance < 3.0:
-     robot1.motorGrip
+     #Runs the claw for (speed,time)
+     robot1.motorGrip.run_time(100, 10)
 
 
