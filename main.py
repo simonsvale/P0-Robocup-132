@@ -48,49 +48,73 @@ section_number = 0
 # repeat forever
 def forever(): 
      global section_number 
-     while True:
-          if 5 < linie_sensor.reflection() < 10:
-               section_number += 1
+     
+     if section_number == 0:
+          section0()
 
-          if section_number == 0:
-               section0()
+     if section_number == 1:
+          section1()
           
-          if section_number == 1:
-               section1()
-
+     if section_number == 2:
+          section2()
+          
+     if section_number == 3:
+          section3()
+          kontroller.speaker.say("I completed the course")
+     
   
 
-def section0():
-     line_follow()
+def section0():          # Sections using line_follow will now work if func section0() is called.
+     while section_number == 0:
+          debug_screen_draw_reflection()
+          line_follow()
+          black_line_stop()
+          
+          
+     kontroller.speaker.say("section 0 done")
+          
 
 def section1():
-     1+1
+     # Doing something static 
+     while section_number == 1:
+          debug_screen_draw_reflection()
+          section1_drive()
+          black_line_stop()
+     
+     kontroller.speaker.say("section 1 done")
+
 
 def section2():
      1+1
+     
 
 def section3():
-     1+1
+     1+2
 
-def section4():
-     1+1
-     
+def section1_drive():
+     print('doing some driving :-)')
+     wait(100)
+     print('doing some more of that :-)')
 
-     
+
+
 def line_follow():
      # Calculate the deviation from the threshold.
      deviation = linie_sensor.reflection() - threshold
  
      # Calculate the turn rate.
-     turn_rate = turn_gain * deviation
+     #turn_rate = turn_gain * deviation
 
      # Set the drive base speed and turn rate.
-     wheels_drive.drive(drive_speed, turn_rate)
+     #wheels_drive.drive(drive_speed, turn_rate)
 
 def black_line_stop():
+     global section_number
      if  8 < linie_sensor.reflection() < 11:
           #robot1.motorR.brake()
-          kontroller.speaker.beep()
+          section_number += 1
+          print('stopped at a black line on section', section_number)
+          
                
 def grip_flask():
      #Script for gripping the flask at a certain distance
@@ -105,10 +129,11 @@ def grip_flask():
 # debug
 #
 
-def screen_draw_reflection():
+def debug_screen_draw_reflection():
      kontroller.screen.draw_text(1, 1, linie_sensor.reflection()) 
      wait(100) 
      kontroller.screen.clear()  
+
 
 forever()
 
