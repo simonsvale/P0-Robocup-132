@@ -27,9 +27,9 @@ motorR = Motor(Port.A, Direction.CLOCKWISE)
 dist_sensor = UltrasonicSensor(Port.S3)           # Assigning the distance (Ultrasonic sensor) sensor to a variable.
 linie_sensor = ColorSensor(Port.S4)               # Assigning the colour sensor to a variable.
 
-wheels_drive = DriveBase(right_motor = motorL, left_motor = motorR, wheel_diameter=22, axle_track=10)          # Wheel motors drivebase
+wheels_drive = DriveBase(right_motor = motorL, left_motor = motorR, wheel_diameter=50, axle_track=10)          # Wheel motors drivebase
 
-BLACK = 60
+BLACK = 41
 WHITE = 99
 threshold = (BLACK + WHITE) / 2                    # Reflection variables calculated 
 
@@ -103,10 +103,10 @@ def line_follow():
      deviation = linie_sensor.reflection() - threshold
  
      # Calculate the turn rate.
-     #turn_rate = turn_gain * deviation
+     turn_rate = turn_gain * deviation
 
      # Set the drive base speed and turn rate.
-     #wheels_drive.drive(drive_speed, turn_rate)
+     wheels_drive.drive(drive_speed, turn_rate)
 
 def black_line_stop():
      global section_number
