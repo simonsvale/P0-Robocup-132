@@ -64,12 +64,7 @@ def forever():
      
   
 
-def section0():          # Sections using line_follow will now work if func section0() is called.
-     while section_number == 0:
-          debug_screen_draw_reflection()
-          line_follow()
-          black_line_stop()
-          
+
           
      kontroller.speaker.say("section 0 done")
           
@@ -107,6 +102,9 @@ def line_follow():
 
      # Set the drive base speed and turn rate.
      wheels_drive.drive(drive_speed, turn_rate)
+     
+     black_line_stop()
+     
 
 def black_line_stop():
      global section_number
