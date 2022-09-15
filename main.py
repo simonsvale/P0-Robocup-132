@@ -29,11 +29,11 @@ linie_sensor = ColorSensor(Port.S4)               # Assigning the colour sensor 
 
 wheels_drive = DriveBase(right_motor = motorL, left_motor = motorR, wheel_diameter=50, axle_track=10)          # Wheel motors drivebase
 
-BLACK = 41
+BLACK = 67 #grey
 WHITE = 99
 threshold = (BLACK + WHITE) / 2                    # Reflection variables calculated 
 
-drive_speed = 1000                                 # Used power of motor in % ?
+drive_speed = 100                                  # Used power of motor in % ?
 
 turn_gain = 4                                      # Turning gain variable, higher variable = more turn
 
@@ -49,9 +49,8 @@ section_number = 0
 def forever(): 
      global section_number 
      
-     if section_number == 0:
-          section0()
-
+     line_follow()
+     
      if section_number == 1:
           section1()
           
