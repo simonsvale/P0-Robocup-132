@@ -3,7 +3,7 @@
 # 2022 P0 Project
 # NAMES HERE ©
 
-
+import math
 
 from pybricks.hubs import EV3Brick
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
@@ -17,7 +17,9 @@ from pybricks.media.ev3dev import SoundFile, ImageFile
 # variables 
 #
 
-kontroller = EV3Brick()                           # Main LEGO brick
+global calibrated_grey_line, calibrated_white_line, threshold, section_number
+
+kontroller = EV3Brick()                          # Main LEGO brick
 
 motorGrip = Motor(Port.C, Direction.CLOCKWISE)    # Assigning the small motor to a variable.
 
@@ -31,13 +33,7 @@ wheels_drive = DriveBase(right_motor = motorR, left_motor = motorL, wheel_diamet
 
 calibration_drive = DriveBase(right_motor = motorR, left_motor = motorL, wheel_diameter=50, axle_track=10)  
 
-BLACK = 40 #grey
-WHITE = 55
-threshold = (BLACK + WHITE) / 2                    # Reflection variables calculated 
-
-drive_speed = 180                              # Used power of motor in % ?
-
-turn_gain = 8                                # Turning gain variable, higher variable = more turn
+drive_speed = 90                              # Used power of motor in % ?         
 
 section_number = 0
 
@@ -48,6 +44,8 @@ section_number = 0
 
 # Calibrates the robot's color sensor, to the grey line, and the white course.
 def calibrate():
+     global threshold
+     
      # Calibrate 
      calibrated_grey_line = line_sensor.reflection()
      kontroller.screen.draw_text(1, 1, line_sensor.reflection()) # debug
@@ -75,34 +73,72 @@ def calibrate():
      wait(50)
      motorL = Motor(Port.D, Direction.COUNTERCLOCKWISE)
      calibration_drive.drive(100, 100)
-     wait(400)
+     wait(200)
      calibration_drive.stop()
      motorL = Motor(Port.D, Direction.CLOCKWISE)
+     
+     # Calculate the threshold based on the calibrated values.
+     threshold = (calibrated_grey_line + calibrated_white_line) / 2
+     
 
-
-
-
+# A function that makes the robot follow the grey line.
 def line_follow():
-     # Calculate the deviation from the threshold.
-     deviation = line_sensor.reflection() - threshold
- 
-     # Calculate the turn rate.
-     turn_rate = turn_gain * deviation
-
-     # Set the drive base speed and turn rate.
-     wheels_drive.drive(drive_speed, turn_rate)
-     
-     #black_line_stop()
-     
-
-def black_line_stop():
      global section_number
-     if  3 < line_sensor.reflection() < 10:
-          wheels_drive.motorR.brake()
-          section_number += 1
-          print('stopped at a black line on section', section_number)
-          
+     while section_number == 0:
+          # Calculate the deviation from the threshold.
+         
+          if line_sensor.reflection() > 99:
+               calibration_drive.stop()
+               turn_rate = threshold
+               wait(1)
+               motorL = Motor(Port.D, Direction.COUNTERCLOCKWISE)
+               wait(1)
+               calibration_drive.drive(drive_speed, 90)
+               wait(150)
+               calibration_drive.stop()
+               wait(1)
+               motorL = Motor(Port.D, Direction.CLOCKWISE)
+
                
+          if 99 >= line_sensor.reflection() > 98:
+               calibration_drive.stop()
+               motorR.run_angle(drive_speed, 90)
+               motorL.stop()
+
+               
+          if 98 >= line_sensor.reflection() > 68:
+               wait(1)
+               calibration_drive.drive(drive_speed, 90)
+               wait(100)
+
+               
+               
+          if 68 >= line_sensor.reflection() > 67:
+               calibration_drive.stop()
+               motorL.run_angle(drive_speed, 90)
+               motorL.stop()
+
+          
+          if 67 >= line_sensor.reflection() > 60:
+               calibration_drive.stop()
+               turn_rate = threshold
+               wait(1)
+               motorR = Motor(Port.A, Direction.COUNTERCLOCKWISE)
+               wait(1)
+               calibration_drive.drive(drive_speed, 90)
+               wait(150)
+               calibration_drive.stop()
+               wait(1)
+               motorR = Motor(Port.A, Direction.CLOCKWISE)
+           
+              
+     
+          if  3 < line_sensor.reflection() < 11:
+               wheels_drive.stop
+               section_number += 1
+               kontroller.screen.draw_text(1, 40, "Section 0 done") 
+     
+
 def grip_flask():
      #Script for gripping the flask at a certain distance
      if dist_sensor.distance() < 40:
@@ -123,5 +159,7 @@ def debug_screen_draw_reflection():
 
 
 calibrate()
-line_follow()
+
+while section_number == 0:
+     line_follow()
 #END OF FILE
