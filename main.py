@@ -23,24 +23,22 @@ kontroller = EV3Brick()                          # Main LEGO brick
 
 motorGrip = Motor(Port.C, Direction.CLOCKWISE)    # Assigning the small motor to a variable.
 
-motorL = Motor(Port.A, Direction.CLOCKWISE)       # Assigning the motors to variables.
-motorR = Motor(Port.D, Direction.CLOCKWISE)
+motorR = Motor(Port.A, Direction.CLOCKWISE)       # Assigning the motors to variables.
+motorL = Motor(Port.D, Direction.CLOCKWISE)
 
 dist_sensor = UltrasonicSensor(Port.S3)           # Assigning the distance (Ultrasonic sensor) sensor to a variable.
 line_sensor = ColorSensor(Port.S4)               # Assigning the colour sensor to a variable.
 
-wheels_drive = DriveBase(right_motor = motorR, left_motor = motorL, wheel_diameter=50, axle_track=10)         # Wheel motors drivebase
+calibration_drive = DriveBase(right_motor = motorR, left_motor = motorL, wheel_diameter=68.8, axle_track=135)  
 
-calibration_drive = DriveBase(right_motor = motorR, left_motor = motorL, wheel_diameter=50, axle_track=10)  
-
-drive_speed = 90                              # Used power of motor in % ?         
+drive_speed = 160                             # Used power of motor in % ?         
 
 section_number = 0
 
 
-#
-# FUNCTIONS
-#
+"""
+FUNCTIONS
+"""
 
 # Calibrates the robot's color sensor, to the grey line, and the white course.
 def calibrate():
@@ -52,14 +50,14 @@ def calibrate():
      
      # Turn the robot.
      motorL = Motor(Port.D, Direction.COUNTERCLOCKWISE)
-     calibration_drive.drive(-100, 100)
+     calibration_drive.drive(-100, 10)
      wait(400)
      calibration_drive.stop()
      
      # Drive forward, calibrate and stop.
      wait(50)
      motorL = Motor(Port.D, Direction.CLOCKWISE)
-     calibration_drive.drive(100, 100)
+     calibration_drive.drive(100, 0)
      wait(1000)
      calibration_drive.stop()
      calibrated_white_line = line_sensor.reflection()
@@ -67,77 +65,84 @@ def calibrate():
      
      # Drive backwards and turn again.
      wait(100)
-     calibration_drive.drive(-100, 100)
+     calibration_drive.drive(-100, 0)
      wait(1000)
      calibration_drive.stop()
      wait(50)
      motorL = Motor(Port.D, Direction.COUNTERCLOCKWISE)
-     calibration_drive.drive(100, 100)
-     wait(200)
+     calibration_drive.drive(100, -10)
+     wait(400)
      calibration_drive.stop()
      motorL = Motor(Port.D, Direction.CLOCKWISE)
      
      # Calculate the threshold based on the calibrated values.
      threshold = (calibrated_grey_line + calibrated_white_line) / 2
      
+     
+def line_follow():
+
+     while True:
+          difference = threshold - line_sensor.reflection() 
+          turn_rate = (0.0044*(difference)**3)*1.3
+          
+          if line_sensor.reflection() > 80:
+               calibration_drive.drive(drive_speed, turn_rate)
+          
+          if 80 >= line_sensor.reflection() > 69:
+               calibration_drive.drive(drive_speed, turn_rate)
+           
+          if 69 >= line_sensor.reflection() > 60:
+               calibration_drive.drive(drive_speed, turn_rate)    
+     
+     
+     """
 
 # A function that makes the robot follow the grey line.
 def line_follow():
-     global section_number
+     global section_number, threshold
+     global drive_speed
+     global motorL, motorR
      while section_number == 0:
+          
+          turn_low = threshold * 1.3
+          turn_sharp = threshold * 1.7
           # Calculate the deviation from the threshold.
-         
-          if line_sensor.reflection() > 99:
+  
+          if line_sensor.reflection() > 95:
                calibration_drive.stop()
-               turn_rate = threshold
                wait(1)
-               motorL = Motor(Port.D, Direction.COUNTERCLOCKWISE)
+               motorR = Motor(Port.D, Direction.CLOCKWISE)
                wait(1)
-               calibration_drive.drive(drive_speed, 90)
+               calibration_drive.drive(drive_speed, -30)
                wait(150)
                calibration_drive.stop()
                wait(1)
-               motorL = Motor(Port.D, Direction.CLOCKWISE)
+               motorR = Motor(Port.D, Direction.COUNTERCLOCKWISE)
 
-               
-          if 99 >= line_sensor.reflection() > 98:
+          if 95 >= line_sensor.reflection() > 67:
                calibration_drive.stop()
-               motorR.run_angle(drive_speed, 90)
-               motorL.stop()
-
-               
-          if 98 >= line_sensor.reflection() > 68:
                wait(1)
-               calibration_drive.drive(drive_speed, 90)
-               wait(100)
-
+               calibration_drive.drive(drive_speed, turn_low)  
+               wait(150)
                
-               
-          if 68 >= line_sensor.reflection() > 67:
-               calibration_drive.stop()
-               motorL.run_angle(drive_speed, 90)
-               motorL.stop()
-
-          
           if 67 >= line_sensor.reflection() > 60:
                calibration_drive.stop()
-               turn_rate = threshold
                wait(1)
-               motorR = Motor(Port.A, Direction.COUNTERCLOCKWISE)
+               motorL = Motor(Port.A, Direction.CLOCKWISE)
                wait(1)
-               calibration_drive.drive(drive_speed, 90)
+               calibration_drive.drive(drive_speed, 30)
                wait(150)
                calibration_drive.stop()
                wait(1)
-               motorR = Motor(Port.A, Direction.CLOCKWISE)
-           
-              
-     
+               motorL = Motor(Port.A, Direction.COUNTERCLOCKWISE)
+          
+          # Blackline stop
           if  3 < line_sensor.reflection() < 11:
                wheels_drive.stop
                section_number += 1
                kontroller.screen.draw_text(1, 40, "Section 0 done") 
-     
+
+     """
 
 def grip_flask():
      #Script for gripping the flask at a certain distance
