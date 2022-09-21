@@ -17,7 +17,7 @@ from pybricks.media.ev3dev import SoundFile, ImageFile
 # variables 
 #
 
-global calibrated_grey_line, calibrated_white_line, threshold, section_number, flask_constant
+global calibrated_grey_line, calibrated_white_line, threshold, section_number, flask_constant, number
 
 kontroller = EV3Brick()                          # Main LEGO brick
 
@@ -36,6 +36,8 @@ drive_speed = 230                             # Used power of motor in % ?
 section_number = 0
 
 threshold = 0
+
+number = 0
 
 
 """
@@ -82,10 +84,15 @@ def calibrate():
      
 def line_follow():
      global section_number, threshold, flask_constant
-     if section_number != 3:
-          flask_constant = 1
+     
+     flask_constant = 1
+     
+     if section_number == 3 and number < 1000:
+          flask_constant = 2.5
+  
+
      difference = threshold - line_sensor.reflection() 
-     turn_rate = flask_constant*0.0044*(difference)**3
+     turn_rate = flask_constant*0.0048*(difference)**3
           
      if line_sensor.reflection() > 80:
           calibration_drive.drive(drive_speed, turn_rate)
@@ -160,34 +167,79 @@ def section_2():
           line_follow()
 
 def section_3():
-     global drive_speed, flask_constant, section_number
-     drive_speed = 50
-     flask_constant = 2.5
+     global drive_speed, flask_constant, section_number, number
+     if number <= 150:
+          drive_speed = 50
      line_follow()
+     if number > 1000:
+          drive_speed = 150
+     number += 1
+          
      if dist_sensor.distance() < 100:
-          kontroller.speaker.beep()
+          calibration_drive.stop()
+          wait(1)
+          calibration_drive.drive(50, 0)
+          wait(400)
           motorGrip.run(-300)
           wait(2200)
           motorGrip.stop() 
           
           while line_sensor.reflection() > 10:
                calibration_drive.drive(100, 0)
-               
+          
+          wait(100)
           calibration_drive.stop()
           motorGrip.run(300)
           wait(2200)
           motorGrip.stop()
+          wait(100)
+          
           
           section_number += 1
           kontroller.speaker.beep() #Debug 
 
 def section_4():
-     calibration_drive.drive(-190, 0)
-     wait(400)
-     calibration_drive.drive(0, 180)
-     wait(400)
+     global drive_speed
+     calibration_drive.drive(-250, 0)
+     wait(2470)
+     calibration_drive.drive(50, -40)
+     wait(2200)
      calibration_drive.stop()
-          
+     while section_number == 4:
+          drive_speed = 230
+          line_follow()
+     
+def section_5():
+     global drive_speed, flask_constant
+     drive_speed = 250
+     line_follow()
+  
+def section_6():
+     global drive_speed
+     drive_speed = 230
+     # Turn the robot.
+     motorL = Motor(Port.D, Direction.COUNTERCLOCKWISE)
+     calibration_drive.drive(190, 20)
+     wait(500)
+     calibration_drive.stop()
+     
+     # Drive foward.
+     wait(50)
+     motorL = Motor(Port.D, Direction.CLOCKWISE)
+     calibration_drive.drive(190, 0)
+     wait(1700)
+     calibration_drive.stop()
+     
+     # Turn again.
+     motorL = Motor(Port.D, Direction.COUNTERCLOCKWISE)
+     calibration_drive.drive(-190, 20)
+     wait(500)
+     calibration_drive.stop()
+     motorL = Motor(Port.D, Direction.CLOCKWISE)
+     
+     while section_number == 6:
+          line_follow()
+     
 
 # The course
 def forever():
@@ -210,6 +262,12 @@ def forever():
                
           if section_number == 4:
                section_4()
+               
+          if section_number == 5:
+               section_5()
+          
+          if section_number == 6:
+               section_6()
         
 
 
