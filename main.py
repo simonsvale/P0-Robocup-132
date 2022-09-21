@@ -31,7 +31,7 @@ line_sensor = ColorSensor(Port.S4)               # Assigning the colour sensor t
 
 calibration_drive = DriveBase(right_motor = motorR, left_motor = motorL, wheel_diameter=68.8, axle_track=135)  
 
-drive_speed = 230                             # Used power of motor in % ?         
+drive_speed = 230                             # Used power of motor in % ?        
 
 section_number = 0
 
@@ -89,7 +89,6 @@ def line_follow():
      
      if section_number == 3 and number < 1000:
           flask_constant = 2.5
-  
 
      difference = threshold - line_sensor.reflection() 
      turn_rate = flask_constant*0.0048*(difference)**3
@@ -120,7 +119,7 @@ def section_1():
      wait(50)
      motorL = Motor(Port.D, Direction.CLOCKWISE)
      calibration_drive.drive(190, 0)
-     wait(1550)
+     wait(1580)
      calibration_drive.stop()
      
      # Turn again.
@@ -215,7 +214,7 @@ def section_5():
      line_follow()
   
 def section_6():
-     global drive_speed
+     global drive_speed, number
      drive_speed = 230
      # Turn the robot.
      motorL = Motor(Port.D, Direction.COUNTERCLOCKWISE)
@@ -240,6 +239,27 @@ def section_6():
      while section_number == 6:
           line_follow()
      
+     # Set number to 0, to prepare for section 7, where we resuse the numbers.
+     number = 0
+
+def section_7():
+     global drive_speed, flask_constant, section_number
+     # Turn the robot.
+     calibration_drive.drive(100, 0)
+     wait(1500)
+     calibration_drive.stop()
+     
+     motorL = Motor(Port.D, Direction.COUNTERCLOCKWISE)
+     calibration_drive.drive(190, 20)
+     wait(530)
+     calibration_drive.stop()
+     motorL = Motor(Port.D, Direction.CLOCKWISE)
+ 
+     while section_number == 7:
+          line_follow()
+     
+                  
+     section_number += 1
 
 # The course
 def forever():
@@ -268,6 +288,9 @@ def forever():
           
           if section_number == 6:
                section_6()
+          
+          if section_number ==7:
+               section_7()
         
 
 
