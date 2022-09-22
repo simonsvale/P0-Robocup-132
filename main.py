@@ -297,8 +297,8 @@ def section_7():
 def section_8():
      # Turn the robot.
      motorL = Motor(Port.D, Direction.COUNTERCLOCKWISE)
-     calibration_drive.drive(-60, 10)
-     wait(70)
+     calibration_drive.drive(60, 10)
+     wait(60)
      calibration_drive.stop()
      motorL = Motor(Port.D, Direction.CLOCKWISE)
      
