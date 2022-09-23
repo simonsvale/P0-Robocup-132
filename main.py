@@ -384,7 +384,7 @@ def section_9():
      # Turn the robot.
      motorL = Motor(Port.D, Direction.COUNTERCLOCKWISE)
      calibration_drive.drive(-60, 18)
-     wait(350)
+     wait(500)
      calibration_drive.stop()
      motorL = Motor(Port.D, Direction.CLOCKWISE)
      
