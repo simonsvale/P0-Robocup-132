@@ -138,6 +138,7 @@ def section_1():
           line_follow()
 
 def section_2():
+     global drive_speed, number
      # Drive a bit forward.
      calibration_drive.drive(200, 0)
      wait(400)
@@ -154,6 +155,7 @@ def section_2():
           calibration_drive.drive(100, 0)
      
      calibration_drive.stop()
+     drive_speed = 95
      
      calibration_drive.drive(100, 0)
      wait(500)
@@ -166,9 +168,15 @@ def section_2():
      wait(700)
      calibration_drive.stop()
      motorR = Motor(Port.A, Direction.CLOCKWISE)
+
      
      while section_number == 2:
           line_follow()
+          number += 1
+          if number > 1200:
+               drive_speed = 230
+     
+     number = 0
 
 def section_3():
      global drive_speed, flask_constant, section_number, number
@@ -295,6 +303,7 @@ def section_7():
           line_follow()
      
 def section_8():
+     global section_number
      # Turn the robot.
      motorL = Motor(Port.D, Direction.COUNTERCLOCKWISE)
      calibration_drive.drive(60, 10)
@@ -353,6 +362,13 @@ def section_8():
      wait(300)
      calibration_drive.stop()
      
+     motorL = Motor(Port.D, Direction.COUNTERCLOCKWISE)
+     calibration_drive.drive(-50, 8)
+     wait(300)
+     calibration_drive.stop()
+     motorL = Motor(Port.D, Direction.CLOCKWISE)
+     wait(300)
+     
      # Open flask grapper.
      motorGrip.run(400)
      wait(2600)
@@ -360,6 +376,7 @@ def section_8():
      section_number += 1
 
 def section_9():
+     global drive_speed
      calibration_drive.drive(-120, 0)
      wait(3000)
      calibration_drive.stop()
@@ -383,8 +400,11 @@ def section_9():
      
      while section_number == 9:
           line_follow()
+          
+     drive_speed = 230
      
-
+def section_10():
+     1+1
 
 # The course
 def forever():
@@ -422,6 +442,9 @@ def forever():
                
           if section_number == 9:
                section_9()
+          
+          if section_number == 10:
+               section_10()
 
 
 
