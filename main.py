@@ -93,6 +93,9 @@ def line_follow():
           
      if section_number == 12:
           flask_constant = 2
+          
+     if section_number == 13:
+          flask_constant = 0.5
 
      difference = threshold - line_sensor.reflection() 
      turn_rate = flask_constant*0.0048*(difference)**3
@@ -326,7 +329,7 @@ def section_8():
      
      line_count = 0
      calibration_drive.drive(60, 0)
-     wait(450)
+     wait(550)
      calibration_drive.stop()
      
      # Turn towards the flask.
@@ -365,13 +368,6 @@ def section_8():
      calibration_drive.drive(60, 0)
      wait(300)
      calibration_drive.stop()
-     
-     motorL = Motor(Port.D, Direction.COUNTERCLOCKWISE)
-     calibration_drive.drive(-50, 8)
-     wait(270)
-     calibration_drive.stop()
-     motorL = Motor(Port.D, Direction.CLOCKWISE)
-     wait(300)
      
      # Open flask grapper.
      motorGrip.run(400)
@@ -514,19 +510,19 @@ def section_12():
 def section_13():
      global drive_speed, number
      calibration_drive.drive(50, 0)
-     wait(900)
+     wait(800)
      calibration_drive.stop()
      
-     drive_speed = 80
+     drive_speed = 60
      
-     while number < 300:
+     while number < 250:
           number += 1
           line_follow()
      
      calibration_drive.stop()
      
      calibration_drive.drive(700, 0)
-     wait(3770)
+     wait(3800)
      calibration_drive.stop()
      kontroller.speaker.say("I'm fast as fock Boi!")
      section_number += 1
