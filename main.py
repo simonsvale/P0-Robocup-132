@@ -381,6 +381,11 @@ def section_9():
      wait(3000)
      calibration_drive.stop()
      
+     # Close claw.
+     motorGrip.run(-400)
+     wait(3500)
+     motorGrip.stop() 
+     
      # Turn the robot.
      motorL = Motor(Port.D, Direction.COUNTERCLOCKWISE)
      calibration_drive.drive(-60, 18)
@@ -437,7 +442,7 @@ def section_10():
      
 def section_11():
      global section_number, drive_speed
-     while dist_sensor.distance() > 107:
+     while dist_sensor.distance() > 110:
           calibration_drive.drive(100, 0)
      calibration_drive.stop()
      
@@ -466,7 +471,7 @@ def section_11():
       # Turn the robot.
      motorR = Motor(Port.A, Direction.COUNTERCLOCKWISE)
      calibration_drive.drive(-50, 20)
-     wait(1000)
+     wait(1100)
      calibration_drive.stop()
      motorR = Motor(Port.A, Direction.CLOCKWISE)
      
@@ -525,6 +530,11 @@ def section_13():
      wait(3800)
      calibration_drive.stop()
      kontroller.speaker.say("I'm fast as fock Boi!")
+     
+     motorGrip.run(400)
+     wait(3500)
+     motorGrip.stop() 
+     
      section_number += 1
 
 # The course
@@ -564,10 +574,10 @@ def forever():
           if section_number == 9:
                section_9()
           
-          if section_number == 10:
+          if section_number == 10: 
                section_10()
-               
-          if section_number == 11:
+
+          if section_number == 11: 
                section_11()
           
           if section_number == 12:
