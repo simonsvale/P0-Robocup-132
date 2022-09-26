@@ -194,6 +194,7 @@ def section_2():
 
 
 def section_3():
+<<<<<<< HEAD
     global drive_speed, flask_constant, section_number, number
     if number <= 150:
         drive_speed = 50
@@ -225,6 +226,54 @@ def section_3():
         line_count = 0
         kontroller.speaker.beep()  # Debug
 
+=======
+     global drive_speed, flask_constant, section_number, number
+     if number <= 150:
+          drive_speed = 50
+          
+     line_follow()
+     
+     if 1200 > number > 1000:
+          drive_speed = 120
+     number += 1
+     
+     if number > 1201:
+          kontroller.speaker.beep()
+          calibration_drive.stop()
+          wait(100)
+          motorR = Motor(Port.A, Direction.COUNTERCLOCKWISE)
+          
+          while dist_sensor.distance() > 200:
+               calibration_drive.drive(-5, 18)
+          
+          calibration_drive.stop()
+          motorR = Motor(Port.A, Direction.CLOCKWISE)
+          
+          calibration_drive.drive(60, 0)
+     
+          if dist_sensor.distance() < 199:
+               calibration_drive.stop()
+               calibration_drive.drive(50, 0)
+               wait(1400)
+               motorGrip.run(-200)
+               wait(2600)
+               motorGrip.stop() 
+               
+               while line_sensor.reflection() > 10:
+                    calibration_drive.drive(100, 0)
+               
+               wait(100)
+               calibration_drive.stop()
+               motorGrip.run(200)
+               wait(2600)
+               motorGrip.stop()
+               wait(100)
+               
+               section_number += 1
+               number += 1
+               line_count = 0
+               kontroller.speaker.beep() #Debug 
+>>>>>>> bba33b2a4a7c61b32da9f6c417d07cf372e58877
 
 def section_4():
     global drive_speed
@@ -322,6 +371,7 @@ def section_7():
 
 
 def section_8():
+<<<<<<< HEAD
     global section_number
     # Turn the robot.
     motorL = Motor(Port.D, Direction.COUNTERCLOCKWISE)
@@ -423,6 +473,110 @@ def section_9():
     drive_speed = 230
 
 
+=======
+     global section_number
+     # Turn the robot.
+     motorL = Motor(Port.D, Direction.COUNTERCLOCKWISE)
+     calibration_drive.drive(60, 10)
+     wait(60)
+     calibration_drive.stop()
+     motorL = Motor(Port.D, Direction.CLOCKWISE)
+     
+     line_count = 0
+     calibration_drive.drive(60, 0)
+     wait(2600)
+     calibration_drive.stop()
+     while line_count < 3:
+          calibration_drive.drive(60, 0)
+          if line_sensor.reflection() < 95:
+               line_count += 1
+               wait(100)
+               kontroller.speaker.beep()
+     
+     line_count = 0
+     calibration_drive.drive(60, 0)
+     wait(550)
+     calibration_drive.stop()
+     
+     # Turn towards the flask.
+     motorL = Motor(Port.D, Direction.COUNTERCLOCKWISE)
+     calibration_drive.drive(50, 8)
+     wait(745)
+     calibration_drive.stop()
+     motorL = Motor(Port.D, Direction.CLOCKWISE)
+     
+     # Drive forward until flask is seen.
+     
+     while dist_sensor.distance() > 60:
+          calibration_drive.drive(60, 0)
+     
+     calibration_drive.stop()
+     wait(1)
+     calibration_drive.drive(60, 0)
+     wait(450)
+     calibration_drive.stop()
+     motorGrip.run(-400)
+     wait(3000)
+     motorGrip.stop() 
+     
+     calibration_drive.drive(-70, 0)
+     wait(2150)
+     calibration_drive.stop()
+     
+     # Drive backwards until inner ring.
+     while line_count < 4:
+          calibration_drive.drive(-65, 0)
+          if line_sensor.reflection() < 95:
+               line_count += 1
+               wait(100)
+               kontroller.speaker.beep()
+     
+     calibration_drive.stop()
+     calibration_drive.drive(60, 0)
+     wait(300)
+     calibration_drive.stop()
+     
+     # Open flask grapper.
+     motorGrip.run(400)
+     wait(3000)
+     motorGrip.stop()
+     section_number += 1
+
+def section_9():
+     global drive_speed
+     calibration_drive.drive(-120, 0)
+     wait(3000)
+     calibration_drive.stop()
+     
+     # Close claw.
+     motorGrip.run(-270)
+     
+     
+     # Turn the robot.
+     motorL = Motor(Port.D, Direction.COUNTERCLOCKWISE)
+     calibration_drive.drive(-60, 18)
+     wait(500)
+     calibration_drive.stop()
+     motorL = Motor(Port.D, Direction.CLOCKWISE)
+     
+     while line_sensor.reflection() > 90:
+          calibration_drive.drive(-200, 0)
+     
+     motorGrip.stop()
+     
+     calibration_drive.stop()
+     motorL = Motor(Port.D, Direction.COUNTERCLOCKWISE)
+     calibration_drive.drive(-60, 18)
+     wait(1600)
+     calibration_drive.stop()
+     motorL = Motor(Port.D, Direction.CLOCKWISE)
+     
+     while section_number == 9:
+          line_follow()
+          
+     drive_speed = 230
+     
+>>>>>>> bba33b2a4a7c61b32da9f6c417d07cf372e58877
 def section_10():
     global drive_speed, number
     # Turn the robot.
