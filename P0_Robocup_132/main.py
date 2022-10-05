@@ -56,7 +56,8 @@ def flip_wheel_left_and_turn(drive_speed, dgs, drive_time):
 
 
 def flip_wheel_right_and_turn(drive_speed, dgs, drive_time):
-    """Turns the EV# op spot by re-assigning the right wheel to the clockwise direction, and running both motors.
+    """Turns the EV# op spot by re-assigning the right wheel to the clockwise direction,
+    and running both motors.
 
     :drive_speed: The velocity of the wheels in millimetres per second.
     :dgs: How many degrees per seconds the wheels should turn.
@@ -112,7 +113,7 @@ def line_follow(turn_constant=1):
     :turn_constant: How much the EV3 should correct. Default is 1. 
     """
     global section_number, threshold
-    if section_number == 3 and number > 1000:
+    if section_number == 3 and number > 2000:
         turn_constant = 1
 
     difference = threshold - line_sensor.reflection()
@@ -450,7 +451,7 @@ def section_11():
     drive_straight(100, 2800)
 
     # Turn/correct and drive the EV3 to lineup to the grey line
-    flip_wheel_right_and_turn(-50, 20, 1100)
+    flip_wheel_right_and_turn(-57, 20, 1100)
     drive_straight(150, 1800)
     drive_speed = 100
 
@@ -491,7 +492,7 @@ def section_13():
     drivetrain.stop()
 
     # Drive as fast as possible to the middle of the runway.
-    drive_straight(700, 3800)
+    drive_straight(700, 3300)
     claw(400, 3500)
     section_number += 1
 
